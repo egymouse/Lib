@@ -1,10 +1,18 @@
 package org.ajls.lib.advanced.hashMap;
 
+import org.ajls.lib.command.D;
+
 import java.util.HashMap;
 import java.util.Objects;
 
 public class HashMapDouble<K> extends HashMap<K, Double> {
     Double defaultValue = 0.0;
+    public HashMapDouble() {
+
+    }
+//    public HashMapDouble(Double defaultValue) {
+//        this.defaultValue = defaultValue;
+//    }
 
     @Override
     public Double get(Object key) {
@@ -46,6 +54,39 @@ public class HashMapDouble<K> extends HashMap<K, Double> {
         Double oldValue = put(key, value);
         if (oldValue == null) return null;
         return value - oldValue;
+    }
+
+    public Double setDefaultValue(Double defaultValue) {
+        Double oldValue = this.defaultValue;
+        this.defaultValue = defaultValue;
+        return oldValue;
+    }
+
+    public Double add(K key, double amount) {
+//        Double value = get(key);
+//        if (value >= upperBound) {
+//            put(key, lowerBound);
+////            return lowerBound;
+//        }
+        return put(key, get(key) + amount);
+//        return value;
+    }
+
+    public Double add(K key, double amount, boolean after) {
+        Double value = get(key);
+//        if (value >= upperBound) {
+//            put(key, lowerBound);
+////            return lowerBound;
+//        }
+        put(key, get(key) + amount);
+        return value + amount;
+    }
+
+    public boolean putMax(K key, Double value) {
+        double oldValue = get(key);
+        if (oldValue > value) { return false; }
+        put(key, value);
+        return true;
     }
 
 }
