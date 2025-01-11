@@ -84,7 +84,7 @@ public class HashMapDouble<K> extends HashMap<K, Double> {
 
     public boolean putMax(K key, Double value) {
         double oldValue = get(key);
-        if (oldValue > value) { return false; }
+        if (oldValue >= value) { return false; }
         put(key, value);
         return true;
     }

@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public class CombatO implements Listener {
     static HashMapInteger<UUID> player_lastAttackedTimeStamp = new HashMapInteger<>();
-    static HashMapDouble<UUID> player_lastAttackedDamage = new HashMapDouble<>();
+    public static HashMapDouble<UUID> player_lastAttackedDamage = new HashMapDouble<>();
 //    static HashMapDouble<UUID>
 //    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 //    public void onEntityDamagedOld(EntityDamageEvent event) {
@@ -84,9 +84,10 @@ public class CombatO implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityDamaged(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {return;}
         Entity entity = event.getEntity();
         UUID entityUUID = entity.getUniqueId();
-        double finalDamage = EventU.getFinalDamage(event);
+        double finalDamage = EventU.getNormalFinalDamage(event);  //getFinalDamage
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             livingEntity.setMaximumNoDamageTicks(20);
@@ -103,7 +104,7 @@ public class CombatO implements Listener {
                 player_lastAttackedDamage.put(entityUUID, finalDamage);
                 BukkitScheduler scheduler = Bukkit.getScheduler();
                 scheduler.runTaskLater(Lib.getLib(), () -> {
-                    livingEntity.setLastDamage(-1);
+                    livingEntity.setLastDamage(-114514);
                 },0);
 //                if (livingEntity instanceof Player player) {
 //                    player.sendMessage(ChatColor.YELLOW + "b." + Time.getTime() % 20);
@@ -118,7 +119,7 @@ public class CombatO implements Listener {
                 }
 
                  */
-                double lastDamage = player_lastAttackedDamage.get(entityUUID);
+
 //                if (lastDamage >= finalDamage) {
 //                    event.setCancelled(true);
 //                }
@@ -132,12 +133,20 @@ public class CombatO implements Listener {
 //                }
 
 
-                livingEntity.setLastDamage(lastDamage);
-                BukkitScheduler scheduler = Bukkit.getScheduler();
-                scheduler.runTaskLater(Lib.getLib(), () -> {
-                    livingEntity.setLastDamage(-1);
-                },0);
-                player_lastAttackedDamage.putMax(entityUUID, finalDamage);
+                double lastDamage = player_lastAttackedDamage.get(entityUUID);
+                if (player_lastAttackedDamage.putMax(entityUUID, finalDamage)) {
+//                    if (livingEntity instanceof Player player) {
+//                        player.sendMessage(ChatColor.GOLD + "b." + Time.getTime() % 20);
+//                    }
+                    livingEntity.setLastDamage(lastDamage);
+                    BukkitScheduler scheduler = Bukkit.getScheduler();
+                    scheduler.runTaskLater(Lib.getLib(), () -> {
+                        livingEntity.setLastDamage(-114514);
+                    },0);
+                }
+                else {
+                    event.setCancelled(true);
+                }
 
             }
 

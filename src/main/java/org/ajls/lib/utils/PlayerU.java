@@ -10,7 +10,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerU {
+public class PlayerU extends LivingEntityU{
     public static int getPlayerEPF(Player player) {
 //        player.getInventory().getArmorContents();
         EntityEquipment entityEquipment = player.getEquipment();
