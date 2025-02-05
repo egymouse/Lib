@@ -3,19 +3,58 @@ package org.ajls.lib.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 public class ScoreboardU {
     //create scoreboard
-    public static void createScoreboard(String name) {//@Nullable String type, @Nullable String displayname
+    //should be forced
+    //boolean forced
+    public static Objective createScoreboard(String name) {
+        return createScoreboard(name, false);
+    }
+    public static Objective createScoreboard(String name, boolean forced) {//@Nullable String type, @Nullable String displayname
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        Objective currentObjective = scoreboard.getObjective(name);
+        boolean create = true;
+        if (currentObjective != null) {
+            if (forced) {
+                currentObjective.unregister();
+            }
+            else {
+                create = false;
+            }
+        }
+        if (create) {
+            Objective objective = scoreboard.registerNewObjective(name, "dummy");
+            return objective;
+        }
+        else {
+            return currentObjective;
+        }
+//        if (currentObjective == null) {
+//            ScoreboardManager manager = Bukkit.getScoreboardManager();
+//            Scoreboard board = manager.getMainScoreboard();
+//            Objective objective = board.registerNewObjective(name, "dummy");
+//            return objective;
+//        }
+//        else {
+//            if (forced) {
+//                currentObjective.unregister();
+//                Objective objective = scoreboard.registerNewObjective(name, "dummy");
+//                return objective;
+//            }
+//        }
+//        return null;
+    }
+
+    public static boolean tryCreateScoreboard(String name) {//@Nullable String type, @Nullable String displayname
         if (Bukkit.getScoreboardManager().getMainScoreboard().getObjective(name) == null) {
             ScoreboardManager manager = Bukkit.getScoreboardManager();
             Scoreboard board = manager.getMainScoreboard();
             Objective objective = board.registerNewObjective(name, "dummy");
+            return true;
         }
+        return false;
     }
 
 
@@ -23,6 +62,35 @@ public class ScoreboardU {
         //get the scoreboard of this name
         Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(name);
         return objective;
+    }
+
+    public static Objective getObjective(String name){
+        //get the scoreboard of this name
+        Objective objective = Bukkit.getScoreboardManager().getMainScoreboard().getObjective(name);
+        return objective;
+    }
+
+    public static void setDisplaySlot(String objective, DisplaySlot slot) {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getMainScoreboard();
+        Objective objective1 = board.getObjective(objective);
+        if (objective1 == null) return;
+        objective1.setDisplaySlot(slot);
+    }
+    public static void setDisplayName(String objective, String name) {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getMainScoreboard();
+        Objective objective1 = board.getObjective(objective);
+        if (objective1 == null) return;
+        objective1.setDisplayName(name);
+    }
+
+    public static boolean isScoreSet(Player player, String name, boolean noObjectiveReturn){  //hasScore
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getMainScoreboard();
+        Objective objective = board.getObjective(name);
+        if (objective == null) { return noObjectiveReturn; }  // default false
+        return objective.getScore(player.getName()).isScoreSet();
     }
 
     public static int getScore(Player player, String name) {
@@ -38,7 +106,16 @@ public class ScoreboardU {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getMainScoreboard();
         Objective objective = board.getObjective(name);
+        if (objective == null) { return; }
         objective.getScore(player.getName()).setScore(score);
+    }
+
+    public static void resetScore(Player player, String name) {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getMainScoreboard();
+        Objective objective = board.getObjective(name);
+        if (objective == null) { return;}
+        objective.getScore(player.getName()).resetScore();
     }
 
     public static void addScore(Player player, String name, int score) {

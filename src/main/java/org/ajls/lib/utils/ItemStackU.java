@@ -78,6 +78,7 @@ public class ItemStackU {
     public static boolean containsLore(ItemStack itemStack, String lore) {
         if (itemStack == null) return false;
         ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return false;
         List<String> loresList = meta.getLore();
         if (loresList == null) return false;
         return loresList.contains(lore);
@@ -97,8 +98,8 @@ public class ItemStackU {
         return itemstack;
     }
 
-    public static ItemStack setAttributeAttackDamage(ItemStack itemstack, int amountPts) {
-        ItemMeta meta = itemstack.getItemMeta();
+    public static ItemStack setAttributeAttackDamage(ItemStack itemStack, int amountPts) {
+        ItemMeta meta = itemStack.getItemMeta();
 //        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("generic.attackDamage", amountPts, AttributeModifier.Operation.ADD_NUMBER));
         AttributeModifier attackDamageModifier = new AttributeModifier(
                 UUID.randomUUID(),    // Unique ID for the modifier
@@ -110,8 +111,8 @@ public class ItemStackU {
 
         // Apply the new modifier to the item
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, attackDamageModifier);  //GENERIC_ATTACK_DAMAGE
-        itemstack.setItemMeta(meta);
-        return itemstack;
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 
     public static ItemStack setAttributePlayerBlockRange(ItemStack itemStack, int amountPts) {

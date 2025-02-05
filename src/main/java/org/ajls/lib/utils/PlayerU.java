@@ -96,6 +96,38 @@ public class PlayerU extends LivingEntityU{
         }
     }
 
+
+    public static void addFoodLevel(Player player, int amount) {
+        // increase saturation if more , saturation cap at foodlevel if decrease
+        int current_food_level = player.getFoodLevel() + amount;
+        float saturation = player.getSaturation();
+        if (current_food_level < saturation) {
+            // saturation must cap at food level
+            if (current_food_level < 0) {
+                // starve
+                current_food_level = 0;
+                saturation = 0;
+            }
+            else {
+                // cap at food level
+                saturation = current_food_level;
+            }
+        }
+        if (current_food_level > 20) {
+            // increase saturation
+            saturation = saturation + current_food_level - 20;
+            // saturation added the more part
+            if (saturation > 20) {
+                saturation = 20;
+                // cap at 20
+            }
+            current_food_level = 20;
+            // cap at 20
+        }
+        player.setFoodLevel(current_food_level);
+        player.setSaturation(saturation);
+    }
+
     public static boolean isPlayerSameTeam(Player player1, Player player2) {
         String teamName1 = ScoreboardU.getPlayerTeamName(player1, false);
         String teamName2 = ScoreboardU.getPlayerTeamName(player2, false);

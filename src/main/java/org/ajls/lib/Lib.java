@@ -1,5 +1,7 @@
 package org.ajls.lib;
 
+import org.ajls.lib.advanced.inventory.InventoryA;
+import org.ajls.lib.advanced.inventory.InventoryListener;
 import org.ajls.lib.command.D;
 import org.ajls.lib.command.Rl;
 import org.ajls.lib.overhaul.CombatO;
@@ -15,6 +17,7 @@ public final class Lib extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         getServer().getPluginManager().registerEvents(new CombatO(), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getCommand("d").setExecutor(new D());
         getCommand("rl").setExecutor(new Rl());
 

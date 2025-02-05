@@ -9,6 +9,7 @@ import org.ajls.lib.utils.EventU;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -134,13 +135,14 @@ public class CombatO implements Listener {
 
 
                 double lastDamage = player_lastAttackedDamage.get(entityUUID);
-                if (player_lastAttackedDamage.putMax(entityUUID, finalDamage)) {
+                if (finalDamage > lastDamage) {
 //                    if (livingEntity instanceof Player player) {
 //                        player.sendMessage(ChatColor.GOLD + "b." + Time.getTime() % 20);
 //                    }
                     livingEntity.setLastDamage(lastDamage);
                     BukkitScheduler scheduler = Bukkit.getScheduler();
                     scheduler.runTaskLater(Lib.getLib(), () -> {
+                        player_lastAttackedDamage.putMax(entityUUID, finalDamage);  // to prevent modifying the last damage before event ended thus making getFinalDamage return 0
                         livingEntity.setLastDamage(-114514);
                     },0);
                 }
@@ -153,7 +155,12 @@ public class CombatO implements Listener {
 
         }
         else {
-            Bukkit.broadcastMessage("lib combatO exception damaged entity not alive");
+            if (entity instanceof Item) {
+
+            }
+            else {
+                Bukkit.broadcastMessage("lib combatO exception damaged entity not alive: " + entity.getName());
+            }
         }
     }
 
