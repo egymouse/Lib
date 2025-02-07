@@ -20,6 +20,10 @@ public class HaxhMap<K, V> {
         return contains;
     }
 
+    public HashSet<V> put(K key, HashSet<V> values) {
+        return hashMap.put(key, values);
+    }
+
     public boolean contains(K key, V value) {
         if (hashMap.containsKey(key)) {
             return hashMap.get(key).contains(value);
@@ -33,7 +37,7 @@ public class HaxhMap<K, V> {
 //            values = new HashSet<>();
 //        }
         HashSet<V> values = hashMap.get(key);
-        if (notNull && values == null) {
+        if (notNull && (values == null) ) {
             values = new HashSet<>();
         }
         return values;
