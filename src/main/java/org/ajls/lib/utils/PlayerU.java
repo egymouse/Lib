@@ -129,6 +129,7 @@ public class PlayerU extends LivingEntityU{
     }
 
     public static boolean isPlayerSameTeam(Player player1, Player player2) {
+        if (player1 == null || player2 == null) return false;
         String teamName1 = ScoreboardU.getPlayerTeamName(player1, false);
         String teamName2 = ScoreboardU.getPlayerTeamName(player2, false);
 //        String teamName1 = getPlayerTeam(player1).getName();
@@ -139,14 +140,17 @@ public class PlayerU extends LivingEntityU{
     }
 
     public static boolean isPlayerSpectator(Player player) {
+        if (player == null) return false;
         return player.getGameMode().equals(GameMode.SPECTATOR);
     }
 
     public static boolean isPlayerDead(Player player) {
+        if (player == null) return false;
         return player.isDead();
     }
 
     public static boolean isPlayerUnplayable(Player player) {
+        if (player == null) return true;
         return isPlayerSpectator(player) || isPlayerDead(player);
     }
 

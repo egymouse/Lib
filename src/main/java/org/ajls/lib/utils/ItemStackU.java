@@ -1,5 +1,7 @@
 package org.ajls.lib.utils;
 
+import org.ajls.lib.namespacedkeys.NamespacedKeys;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -19,6 +21,16 @@ import java.util.List;
 import java.util.UUID;
 
 public class ItemStackU {
+    public static boolean hasItemMeta(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        if (!itemStack.hasItemMeta()) return false;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            Bukkit.broadcastMessage("Lib ItemStackU hasItemMeta but its null");
+            return false;
+        }
+        return true;
+    }
     //unbreakable
     public static ItemStack setUnbreakable(ItemStack itemStack){
         // set unbreakable
@@ -40,6 +52,15 @@ public class ItemStackU {
         return meta.getDisplayName();
     }
 
+    public static List<String> getLore(ItemStack itemStack) {
+        if (!hasItemMeta(itemStack)) return null;
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return null;
+        List<String> loresList = meta.getLore();
+        if (loresList == null) return null;
+        return loresList;
+    }
+
     public static ItemStack setLore(ItemStack itemStack, String lore) {
         ItemMeta meta = itemStack.getItemMeta();
         List<String> loresList = new ArrayList<String>();
@@ -58,6 +79,20 @@ public class ItemStackU {
         loresList.add(lore);
         meta.setLore(loresList);
         itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
+    public static ItemStack removeLore(ItemStack itemStack, String lore, boolean removeAll) {
+        if (!hasItemMeta(itemStack)) return itemStack;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<String> loresList = itemMeta.getLore();
+        if (loresList == null) return itemStack;
+        loresList.remove(lore);
+        if (removeAll) {
+            while (loresList.contains(lore)) {
+                loresList.remove(lore);
+            }
+        }
         return itemStack;
     }
 
@@ -136,7 +171,7 @@ public class ItemStackU {
 
     public static ItemStack setStringPersistentData(ItemStack itemStack, NamespacedKey namespacedKey, String value) {
         if (itemStack == null) return itemStack;
-        if (!itemStack.hasItemMeta()) return itemStack;
+//        if (!itemStack.hasItemMeta()) return itemStack;
 
 
 
@@ -148,6 +183,13 @@ public class ItemStackU {
         return itemStack;
     }
 
+    public static boolean hasStringPersistentData(ItemStack itemStack, NamespacedKey namespacedKey) {
+        if (itemStack == null) return false;
+        if (!itemStack.hasItemMeta()) return false;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        return itemMeta.getPersistentDataContainer().has(namespacedKey, PersistentDataType.STRING);
+    }
+
     public static String getStringPersistentData(ItemStack itemStack, NamespacedKey namespacedKey) {
         if (itemStack == null) return null;
         if (!itemStack.hasItemMeta()) return null;
@@ -157,6 +199,14 @@ public class ItemStackU {
 
         return itemMeta.getPersistentDataContainer().get(namespacedKey, PersistentDataType.STRING);
 //        return itemStack;
+    }
+
+    public static ItemStack setItemStackNameSpace(ItemStack itemStack, String namespace) {
+        return setStringPersistentData(itemStack, NamespacedKeys.ITEM_STACK_NAMESPACE, namespace);
+    }
+
+    public static String getItemStackNameSpace(ItemStack itemStack) {
+        return getStringPersistentData(itemStack, NamespacedKeys.ITEM_STACK_NAMESPACE);
     }
 
     public static ItemStack setPersistentData(ItemStack itemStack, NamespacedKey namespacedKey, PersistentDataType persistentDataType, Object value) {

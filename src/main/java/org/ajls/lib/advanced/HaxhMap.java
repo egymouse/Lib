@@ -47,7 +47,7 @@ public class HaxhMap<K, V> {
         return getValues(key, false);
     }
 
-    public HashSet<K> getKeys(V value) {
+    public HashSet<K> getKeys(V value, boolean notNull) {
         HashSet<K> keys = new HashSet<>();
         for (K key : hashMap.keySet()) {
             HashSet<V> hashSet = hashMap.get(key);
@@ -55,7 +55,7 @@ public class HaxhMap<K, V> {
                 keys.add(key);
             }
         }
-        if (keys.isEmpty()) {
+        if (keys.isEmpty() && !notNull) {
             return null;
         }
         return keys;
