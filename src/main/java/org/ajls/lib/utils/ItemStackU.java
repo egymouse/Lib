@@ -238,6 +238,33 @@ public class ItemStackU {
         return itemStack.getEnchantmentLevel(enchantment);
      }
 
+     public static ItemMeta getItemMetaNotNull(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemStack == null) return null;
+        if (!itemStack.hasItemMeta()) return null;
+        return itemStack.getItemMeta();
+     }
+
+     public static ItemStack setNotDroppable(ItemStack itemStack) {
+        if (itemStack == null) return itemStack;
+//        if (!itemStack.hasItemMeta()) return itemStack;
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.getPersistentDataContainer().set(NamespacedKeys.NOT_DROPPABLE, PersistentDataType.INTEGER, 1);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+     }
+
+     public static boolean isNotDroppable(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        if (!itemStack.hasItemMeta()) return false;
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        return itemMeta.getPersistentDataContainer().has(NamespacedKeys.NOT_DROPPABLE, PersistentDataType.INTEGER);
+     }
+
+     //TODO: generate itemMeta if it don't have one
+
 
 
 

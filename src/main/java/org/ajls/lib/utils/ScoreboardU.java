@@ -103,6 +103,7 @@ public class ScoreboardU {
     }
 
     public static void setScore(Player player, String name, int score) {
+        if (player == null) return;
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getMainScoreboard();
         Objective objective = board.getObjective(name);

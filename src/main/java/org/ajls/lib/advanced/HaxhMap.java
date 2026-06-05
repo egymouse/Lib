@@ -10,6 +10,10 @@ public class HaxhMap<K, V> {
         hashMap = new HashMap<>();
     }
 
+    public HashMap<K, HashSet<V>> getHashMap() {
+        return hashMap;
+    }
+
     public boolean put(K key, V value) {
         HashSet<V> hashSet = new HashSet<>();
         if (hashMap.containsKey(key)) {
