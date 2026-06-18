@@ -1,5 +1,6 @@
 package org.ajls.lib.utils;
 
+import com.google.common.base.Charsets;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
@@ -9,6 +10,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class PlayerU extends LivingEntityU{
     public static int getPlayerEPF(Player player) {
@@ -173,6 +176,12 @@ public class PlayerU extends LivingEntityU{
             result = ScoreboardU.getPlayerTeam(player1).allowFriendlyFire();
         }
         return result;
+    }
+
+
+    public static UUID getUUIDFromName(String name) {
+        if (name == null) return null;
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
     }
 
 }

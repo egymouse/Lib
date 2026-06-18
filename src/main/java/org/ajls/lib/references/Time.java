@@ -8,6 +8,7 @@ public class Time {
     static int time = 0;
     static boolean started = false;
 
+    @Deprecated  //use Bukkit.getCurrentTick()
     public static void startTimer() {
         if (started) return;
         started = true;
@@ -27,6 +28,7 @@ public class Time {
         }, 1, 1);
     }
 
+    @Deprecated //use Bukkit.getCurrentTick()
     public static int getTime() {
         return time;
     }

@@ -1,5 +1,7 @@
 package org.ajls.lib.utils;
 
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -196,18 +198,36 @@ public class ScoreboardU {
     }
 
     public static ChatColor getPlayerTeamColor(Player player, boolean notNull){
-        if (getPlayerTeam(player) == null) {
+        Team team = getPlayerTeam(player);
+        if (team == null) {
             if (notNull) {
                 return ChatColor.WHITE;
             }
             return null;
         }
-        return getPlayerTeam(player).getColor();
+        return team.getColor();
     }
 
     public static ChatColor getPlayerTeamColor(Player player) {
         return getPlayerTeamColor(player, true);
     }
+
+    public static TextColor getPlayerTeamTextColor(Player player, boolean notNull){
+        Team team = getPlayerTeam(player);
+        if (team == null) {
+            if (notNull) {
+                return NamedTextColor.WHITE;
+            }
+            return null;
+        }
+        return team.color();
+    }
+
+//    public static TextColor getPlayerTeamTextColor(Player player){
+//        return getPlayerTeamTextColor(player, true);
+//    }
+
+
 
 //    public static boolean isPlayerSameTeam(Player player1, Player player2) {
 //        String teamName1 = getPlayerTeam(player1).getName();
