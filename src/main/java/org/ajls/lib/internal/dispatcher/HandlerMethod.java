@@ -1,26 +1,32 @@
 package org.ajls.lib.internal.dispatcher;
 
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 
 import java.lang.reflect.Method;
 
 /**
  * 封装一个被 @MyEventHandler 标记的方法，包含其优先级和忽略取消标志。
  */
-class HandlerMethod {
+public class HandlerMethod {
     private final Object listener;      // 方法所属的监听器实例
     private final Method method;        // 方法反射对象
     private final int priority;
     private final boolean ignoreCancelled;
+    private final EventPriority bukkitPriority;   // ★ 新增
 
-    HandlerMethod(Object listener, Method method, int priority, boolean ignoreCancelled) {
+    HandlerMethod(Object listener, Method method, int priority,
+                  boolean ignoreCancelled, EventPriority bukkitPriority) {  // 构造参数增加
         this.listener = listener;
         this.method = method;
         this.priority = priority;
         this.ignoreCancelled = ignoreCancelled;
-        // 确保方法可访问（即使是private）
+        this.bukkitPriority = bukkitPriority;    // ★ 赋值
         method.setAccessible(true);
     }
+
+    // 增加 getter
+    public EventPriority getBukkitPriority() { return bukkitPriority; }
 
     public int getPriority() {
         return priority;
