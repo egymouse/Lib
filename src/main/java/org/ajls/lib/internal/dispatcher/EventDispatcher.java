@@ -83,10 +83,7 @@ public class EventDispatcher {
      * 分发事件给指定 Bukkit 优先级的方法列表
      */
     public void dispatchFor(Event event, EventPriority bukkitPriority) {
-        Map<EventPriority, List<HandlerMethod>> priorityMap = handlerMap.get(event.getClass());
-        if (priorityMap == null) return;
-
-        List<HandlerMethod> handlers = priorityMap.get(bukkitPriority);
+        List<HandlerMethod> handlers = findHandlers(event.getClass(), bukkitPriority);
         if (handlers == null) return;
 
         boolean cancellable = event instanceof Cancellable;
@@ -96,6 +93,36 @@ public class EventDispatcher {
             }
             handler.invoke(event);
         }
+    }
+
+
+    /**
+     * 根据事件类型和 Bukkit 优先级查找对应的处理器列表。
+     * 若精确匹配没有，则向上遍历父类（继承链）查找。
+     * 返回最先找到的（距离子类最近的）父类的处理器。
+     */
+    private List<HandlerMethod> findHandlers(Class<?> eventClass, EventPriority bukkitPriority) {
+        // 1. 精确匹配
+        Map<EventPriority, List<HandlerMethod>> priorityMap = handlerMap.get(eventClass);
+        if (priorityMap != null) {
+            List<HandlerMethod> list = priorityMap.get(bukkitPriority);
+            if (list != null && !list.isEmpty()) {
+                return list;
+            }
+        }
+        // 2. 向上遍历父类（直到 Event 为止）
+        Class<?> superClass = eventClass.getSuperclass();
+        while (superClass != null && Event.class.isAssignableFrom(superClass)) {
+            priorityMap = handlerMap.get(superClass);
+            if (priorityMap != null) {
+                List<HandlerMethod> list = priorityMap.get(bukkitPriority);
+                if (list != null && !list.isEmpty()) {  //todo 这只是返回最近的，希望返回所有，而且最好是源头就解决，源头registerEvent就要老老实实子类也触发父类
+                    return list;
+                }
+            }
+            superClass = superClass.getSuperclass();
+        }
+        return null;
     }
 
     public Map<EventPriority, List<HandlerMethod>> getHandlerMapFor(Class<? extends Event> eventType) {

@@ -7,6 +7,7 @@ import org.ajls.lib.command.Rl;
 import org.ajls.lib.internal.dispatcher.EventDispatcher;
 import org.ajls.lib.internal.registry.BukkitEventBinder;
 import org.ajls.lib.listeners.GeneralListener;
+//import org.ajls.lib.overhaul.CombatO;
 import org.ajls.lib.overhaul.CombatO;
 import org.ajls.lib.references.Time;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,7 +26,7 @@ public final class Lib extends JavaPlugin {
         binder = new BukkitEventBinder(this, dispatcher);
 
         getServer().getPluginManager().registerEvents(new GeneralListener(), this);
-        getServer().getPluginManager().registerEvents(new CombatO(), this);
+//        getServer().getPluginManager().registerEvents(new CombatO(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getCommand("d").setExecutor(new D());
         getCommand("rl").setExecutor(new Rl());

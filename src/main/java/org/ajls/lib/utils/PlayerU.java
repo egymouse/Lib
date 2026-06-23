@@ -32,6 +32,7 @@ public class PlayerU extends LivingEntityU{
         return EPF;
     }
 
+    @Deprecated
     public static void addHealth(LivingEntity entity, double health) {
         double absorptionPlayer = entity.getAbsorptionAmount();
         double healthPlayer = entity.getHealth();

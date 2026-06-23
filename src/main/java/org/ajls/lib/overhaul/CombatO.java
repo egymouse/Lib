@@ -83,7 +83,9 @@ public class CombatO implements Listener {
 //
 //    }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)  //懒得维护了，但是如果真的要维护可以用hashmap标记事件，如果eventU handle事件时这里没有标记就可以用hashmap来提取上一次的伤害（也不对，会受到114514的影响），如果标记了就不要用hashmap了，final damage就是对的，所以应该正解就是只有后面这一种
     public void onEntityDamaged(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {return;}
         Entity entity = event.getEntity();
@@ -101,7 +103,7 @@ public class CombatO implements Listener {
 //                player.sendMessage("b" + Time.getTime() % 20);
 //            }
 
-            if (noDamageTicks <= maximumNoDamageTicks / 2) {
+            if (noDamageTicks <= maximumNoDamageTicks / 2) {  //时间计算：如果在 Tick 0 受到攻击，那么无敌帧会覆盖 Tick 0 到 Tick 9。从 Tick 10 开始，无敌状态就结束了，所以这里可以取等
                 player_lastAttackedDamage.put(entityUUID, finalDamage);
                 BukkitScheduler scheduler = Bukkit.getScheduler();
                 scheduler.runTaskLater(Lib.getLib(), () -> {
@@ -140,10 +142,11 @@ public class CombatO implements Listener {
 //                        player.sendMessage(ChatColor.GOLD + "b." + Time.getTime() % 20);
 //                    }
                     livingEntity.setLastDamage(lastDamage);
+                    player_lastAttackedDamage.putMax(entityUUID, finalDamage);  //这样同一tick内的攻击也能正常结算，比如tick0造成了1伤害和2伤害，造成1伤害时如果记录lastDamage在runLater，那么在造成2伤害时lastDamage他还以为是0，显然是错误的
                     BukkitScheduler scheduler = Bukkit.getScheduler();
                     scheduler.runTaskLater(Lib.getLib(), () -> {
-                        player_lastAttackedDamage.putMax(entityUUID, finalDamage);  // to prevent modifying the last damage before event ended thus making getFinalDamage return 0
-                        livingEntity.setLastDamage(-114514);
+                        livingEntity.setLastDamage(-114514);  // to prevent modifying the last damage before event ended thus making getFinalDamage return 0
+                        //todo 但是还是有个问题，毕竟延迟了1tick执行，那么同一tick内更低的伤害因为setLastDamage没改过来还是不会触发事件，还有下一tick如果是先事件后runTaskLater一样也有这个问题呢
                     },0);
                 }
                 else {
