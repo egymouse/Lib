@@ -32,6 +32,11 @@ public class HandlerMethod {
         return priority;
     }
 
+    public Method getMethod() {
+        return method;
+    }
+
+
     public boolean isIgnoreCancelled() {
         return ignoreCancelled;
     }

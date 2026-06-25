@@ -83,7 +83,14 @@ public class EventDispatcher {
      * 分发事件给指定 Bukkit 优先级的方法列表
      */
     public void dispatchFor(Event event, EventPriority bukkitPriority) {
-        List<HandlerMethod> handlers = findHandlers(event.getClass(), bukkitPriority);
+//        List<HandlerMethod> handlers = findHandlers(event.getClass(), bukkitPriority);
+
+        Map<EventPriority, List<HandlerMethod>> priorityMap = handlerMap.get(event.getClass());
+        if (priorityMap == null) return;
+
+        List<HandlerMethod> handlers = priorityMap.get(bukkitPriority);
+
+
         if (handlers == null) return;
 
         boolean cancellable = event instanceof Cancellable;
