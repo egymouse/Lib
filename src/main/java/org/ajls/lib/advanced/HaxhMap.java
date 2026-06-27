@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HaxhMap<K, V> {
+public class HaxhMap<K, V> {  //BiMultiMap<K, V>
     HashMap<K, HashSet<V>> hashMap;
     public HaxhMap() {
         hashMap = new HashMap<>();
