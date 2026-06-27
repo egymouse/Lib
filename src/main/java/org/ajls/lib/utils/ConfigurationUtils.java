@@ -3,52 +3,110 @@ package org.ajls.lib.utils;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ConfigurationUtils {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-//    public static boolean initialize(Configuration configuration, String path) {
-//        if (configuration.get(path) == null) {
-//            configuration.set(path, "true");
-//        }
-//    }
+public final class ConfigurationUtils {
+
+    private ConfigurationUtils() {
+    }
 
     public static boolean trySet(Configuration configuration, String path, Object value) {
         if (configuration.isSet(path)) {
             return false;
         }
+
         configuration.set(path, value);
         return true;
     }
 
     public static boolean tryCreateSection(Configuration configuration, String path) {
-        if (!configuration.isConfigurationSection(path)) {
-            configuration.createSection(path);
-            return true;
+        if (configuration.isConfigurationSection(path)) {
+            return false;
         }
-        return false;
 
-        //FileConfiguration config = getConfig();
-        //
-        //ConfigurationSection selection;
-        //
-        //if (config.isConfigurationSection("selection")) {
-        //    // 已经是 section，直接拿来用，不会覆盖
-        //    selection = config.getConfigurationSection("selection");
-        //} else if (config.contains("selection")) {
-        //    // selection 存在，但不是 section，例如 selection: hello
-        //    getLogger().warning("config.yml 中 selection 已存在，但它不是一个配置节点！");
-        //    getLogger().warning("请把 selection 改成类似 selection: {} 的形式。");
-        //    return;
-        //} else {
-        //    // selection 不存在，创建新的空 section
-        //    selection = config.createSection("selection");
-        //    saveConfig();
-        //}
+        if (configuration.contains(path)) {
+            configuration.set(path, null);
+        }
+
+        configuration.createSection(path);
+        return true;
     }
 
     public static ConfigurationSection getOrCreateSection(Configuration configuration, String path) {
-        if (!configuration.isConfigurationSection(path)) {
-            return configuration.createSection(path);
+        if (configuration.isConfigurationSection(path)) {
+            return configuration.getConfigurationSection(path);
         }
-        return configuration.getConfigurationSection(path);
+
+        if (configuration.contains(path)) {
+            configuration.set(path, null);
+        }
+
+        return configuration.createSection(path);
+    }
+
+    public static List<UUID> getUuidList(Configuration configuration, String path, Logger logger) {
+        List<String> stringList = configuration.getStringList(path);
+        List<UUID> uuidList = new ArrayList<>();
+
+        for (String value : stringList) {
+            try {
+                uuidList.add(UUID.fromString(value));
+            } catch (IllegalArgumentException exception) {
+                if (logger != null) {
+                    logger.warning("配置路径 " + path + " 中存在无效 UUID: " + value);
+                }
+            }
+        }
+
+        return uuidList;
+    }
+
+    public static List<String> toUuidStringList(Collection<UUID> uuids) {
+        return uuids.stream()
+                .map(UUID::toString)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public static void setUuidList(Configuration configuration, String path, Collection<UUID> uuids) {
+        configuration.set(path, toUuidStringList(uuids));
+    }
+
+    public static boolean addUniqueStringToList(Configuration configuration, String path, String value) {
+        List<String> list = configuration.getStringList(path);
+
+        if (list.contains(value)) {
+            return false;
+        }
+
+        list.add(value);
+        configuration.set(path, list);
+
+        return true;
+    }
+
+    public static boolean removeStringFromList(Configuration configuration, String path, String value) {
+        List<String> list = configuration.getStringList(path);
+
+        boolean removed = list.remove(value);
+
+        if (removed) {
+            configuration.set(path, list);
+        }
+
+        return removed;
+    }
+
+    public static boolean addUniqueUuidToList(Configuration configuration, String path, UUID uuid) {
+        return addUniqueStringToList(configuration, path, uuid.toString());
+    }
+
+    public static boolean removeUuidFromList(Configuration configuration, String path, UUID uuid) {
+        return removeStringFromList(configuration, path, uuid.toString());
     }
 }
