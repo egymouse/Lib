@@ -183,6 +183,20 @@ public class ItemStackU {
         return itemStack;
     }
 
+    public static ItemStack removePersistentData(ItemStack itemStack, NamespacedKey namespacedKey) {
+        if (itemStack == null) return itemStack;
+//        if (!itemStack.hasItemMeta()) return itemStack;
+
+
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+
+        itemMeta.getPersistentDataContainer().remove(namespacedKey);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
     public static boolean hasStringPersistentData(ItemStack itemStack, NamespacedKey namespacedKey) {
         if (itemStack == null) return false;
         if (!itemStack.hasItemMeta()) return false;

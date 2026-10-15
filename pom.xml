@@ -81,9 +81,9 @@
         <dependency>
             <groupId>org.purpurmc.purpur</groupId>
             <artifactId>purpur</artifactId>
-            <version>1.21.4-R0.1-SNAPSHOT</version>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>D:\David\MC\server\itself\Annihilator\versions\1.21.4\purpur-1.21.4.jar</systemPath>
+            <systemPath>C:\MC_Server\mw_test\versions\1.21.1\purpur-1.21.1.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
