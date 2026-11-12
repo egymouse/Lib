@@ -93,6 +93,7 @@ public class HaxhMap<K, V> {  //BiMultiMap<K, V>
 
     public boolean remove(K key, V value) {
         HashSet<V> hashSet = hashMap.get(key);
+        if (hashSet == null) {return false;}
         boolean removed = hashSet.remove(value);
         if (hashSet.isEmpty()) {
             hashMap.remove(key);
