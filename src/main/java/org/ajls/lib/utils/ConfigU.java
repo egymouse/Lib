@@ -30,7 +30,8 @@ public class ConfigU {
         } else if (section.getKeys(false).isEmpty()) {
             // 路径存在，但下面没有任何子节点（即空白占位符）
             // 比如配置里写了 "Test.Parent:" 但后面没跟任何值
-            configuration.set(parentPath, null);
+//            configuration.set(parentPath, null);
+            remove(configuration, parentPath);  //递归调用
         }
 
     }

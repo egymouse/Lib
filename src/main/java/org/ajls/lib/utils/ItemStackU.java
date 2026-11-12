@@ -245,6 +245,15 @@ public class ItemStackU {
 //        itemStack.setItemMeta(itemMeta);
 //        return itemStack;
     }
+
+    public static boolean hasPersistentData(ItemStack itemStack, NamespacedKey namespacedKey, PersistentDataType persistentDataType) {
+        if (itemStack == null) return false;
+        if (!itemStack.hasItemMeta()) return false;
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        return itemMeta.getPersistentDataContainer().has(namespacedKey, persistentDataType);
+    }
+
      public static int getEnchantmentLevel(ItemStack itemStack, Enchantment enchantment) {
         if (enchantment == null) return 0;
         if (itemStack == null) return 0;
