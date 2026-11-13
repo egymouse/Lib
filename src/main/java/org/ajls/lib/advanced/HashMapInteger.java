@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class HashMapInteger<K> extends HashMap<K, Integer> {
+    //todo 增加放入最大值/最小值 增加clampPut
     int upperBound = Integer.MAX_VALUE;
     int lowerBound = 0;
     Integer defaultValue = 0;
@@ -77,6 +78,20 @@ public class HashMapInteger<K> extends HashMap<K, Integer> {
             }
             return super.put(key, value);
         }
+    }
+
+    public Integer putClamp(K key, Integer value) {
+        if (value < lowerBound) {
+            value = lowerBound;
+        }
+        if (value > upperBound) {
+            value = upperBound;
+        }
+        return put(key, value);
+    }
+
+    public Integer addClamp(K key, Integer value) {
+        return putClamp(key, get(key) + value);
     }
 
     public boolean putMax(K key, Integer value) {
